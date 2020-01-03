@@ -1,0 +1,9 @@
+WHITE = (210, 205, 210)
+BLACK = (0,0,0)
+YELLOW = (255,255,0)
+RED = (255,20,20)
+
+FPS = 10
+W = 780
+H = 680
+TITLE = "S N A K E  G A M E"
