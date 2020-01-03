@@ -2,4 +2,4 @@
 
 Very basic version of snake game made with pygame.
 
-![GitHub Logo](screenshot.png)
+![GitHub Logo](snakegame.png)
