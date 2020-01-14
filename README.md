@@ -1,5 +1,5 @@
 # Snake game
 
-Very basic version of snake game made with pygame.
+Snake game made with Pygame. Enjoy playing. Any feedback is welcome.
 
-![GitHub Logo](snakegame.png)
+![GitHub Logo](screenshot.png)

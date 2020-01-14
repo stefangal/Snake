@@ -25,7 +25,11 @@ class Snake:
         self.path = []
         self.counter = 1
         self.killed = False
+        self.best = self.get_best_score()
 
+    def get_best_score(self):
+        with open('bestscore.db', 'r') as f:
+            return f.read()
 
     def add_food(self):
         if self.emptyboard:
@@ -33,8 +37,7 @@ class Snake:
             self.foodY = random.randrange(80, H-30, 30)
             self.emptyboard = False
         self.screen.blit(self.food_img, (self.foodX+1, self.foodY+4))
-        pygame.display.flip()
-
+        #pygame.display.flip()
 
     def events(self):
         for event in pygame.event.get():
@@ -66,27 +69,43 @@ class Snake:
                 pygame.draw.rect(self.screen, BLACK, [x,y,30,30], 1)
 
     def show_counter(self):
-        countText = pygame.font.SysFont(None, 64)
-        counting = countText.render(str(self.counter-1), True, RED)
-        self.screen.blit(counting, (W-80,20))
+        countTitleFont = pygame.font.SysFont(None, 32)
+        countNrFont = pygame.font.SysFont(None, 64)
+        countTitle = countTitleFont.render("Score", True, RED)
+        countNr = countNrFont.render(str(self.counter-1), True, RED)
+        self.screen.blit(countTitle, (W-100,10))
+        self.screen.blit(countNr, (W-100,35))
+
+    def show_best_score(self):
+        bestTitleFont = pygame.font.SysFont(None, 32)
+        bestNrFont = pygame.font.SysFont(None, 64)
+        bestTitle = bestTitleFont.render("Best score", True, RED)
+        bestNr = bestNrFont.render(str(self.best), True, RED)
+        self.screen.blit(bestTitle, (20,10))
+        self.screen.blit(bestNr, (25,35))
 
     def snake(self):
         body = []
 
         if self.grow:
+            if int(self.best) < self.counter:
+                self.best = self.counter
+
             self.counter += 1
             self.grow = False
+            with open('bestscore.db', 'w') as f:
+                f.write(str(self.best))
 
         self.path.append((self.x, self.y))
         body = self.path[-self.grow+1:][-self.counter:]
         if body:
             for x, y in body:
-                self.snake_body = pygame.draw.rect(self.screen, RED, [x+2, y+2, 26, 26], 0)
+                self.snake_body = pygame.draw.rect(self.screen, STEELBLUE, [x+2, y+2, 26, 26], 0)
 
         if body.count((self.x, self.y)) > 1:
             self.killed = True
 
-        pygame.draw.rect(self.screen, YELLOW, [self.x+2, self.y+2, 26, 26], 0)
+        pygame.draw.rect(self.screen, GOLD, [self.x+2, self.y+2, 26, 26], 0)
         pygame.draw.rect(self.screen, BLACK, [self.x+5, self.y+5, 5, 5], 0)
         pygame.draw.rect(self.screen, BLACK, [self.x+20, self.y+5, 5, 5], 0)
 
@@ -94,10 +113,12 @@ class Snake:
             for _ in range(5):
                 pygame.draw.rect(self.screen, YELLOW, [0, 0, W, 80], 0)
                 self.show_counter()
+                self.show_best_score()
                 pygame.time.delay(300)
                 pygame.display.flip()
                 pygame.draw.rect(self.screen, BLACK, [0, 0, W, 80], 0)
                 self.show_counter()
+                self.show_best_score()
                 pygame.time.delay(300)
                 pygame.display.flip()
 
@@ -118,9 +139,10 @@ class Snake:
 
     def game_loop(self):
         self.clock.tick(self.FPS)
-        self.screen.fill(WHITE)
+        self.screen.fill(DARKSLATEGRAY)
         self.board()
         self.show_counter()
+        self.show_best_score()
         self.events()
         self.set_limits()
         self.add_food()
