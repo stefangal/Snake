@@ -160,6 +160,22 @@ class Snake:
             self.grow = True
             self.foods.append(self.food)
 
+    def play_again(self):
+        yFont = pygame.font.SysFont(None, 32)
+        goFont =pygame.font.SysFont(None, 96)
+        y_again = yFont.render('Press "Y" for play again', True, GOLD)
+        go = goFont.render("GAME OVER", True, GOLD)
+        self.screen.blit(go, (W/2-190,290))
+        self.screen.blit(y_again, (W/2-100, 360))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    self.killed = False
+                    snake = Snake()
+                    snake.run()
 
     def game_loop(self):
         self.clock.tick(self.FPS)
@@ -173,12 +189,14 @@ class Snake:
         self.collision()
         pygame.display.flip()
 
-
     def run(self):
-        while not self.killed:
+        play = True
+        while not self.killed and play:
             self.game_loop()
+            while self.killed:
+                self.play_again()
+                pygame.display.flip()
         pygame.quit()
-
 
 if __name__ == "__main__":
     snake = Snake()
