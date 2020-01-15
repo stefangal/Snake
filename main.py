@@ -28,6 +28,8 @@ class Snake:
         self.best = self.get_best_score()
         self.food = self.hamburger_img
         self.foods = []
+        self.apple_qty = 0
+        self.hamburger_qty = 0
 
     def get_best_score(self):
         with open('bestscore.db', 'r') as f:
@@ -91,19 +93,25 @@ class Snake:
 
         foodFont = pygame.font.SysFont(None, 22)
         applePoints = foodFont.render("+1   SPEED: Fast", True, GOLD)
+        appleQty = foodFont.render(str(self.apple_qty)+"x", True, GOLD)
+        hamburgerQty = foodFont.render(str(self.hamburger_qty)+"x", True, GOLD)
         hamburgerPoints = foodFont.render("+3   SPEED: Normal", True, GOLD)
-        self.screen.blit(hamburgerPoints, (330,13))
-        self.screen.blit(applePoints, (330,46))
+        self.screen.blit(hamburgerQty, (255, 15))
+        self.screen.blit(appleQty, (255, 49))
         self.screen.blit(self.hamburger_img, (290, 10))
         self.screen.blit(self.apple_img, (290, 39))
+        self.screen.blit(hamburgerPoints, (327,15))
+        self.screen.blit(applePoints, (327,49))
 
     def snake(self):
         body = []
         if self.grow:
             if self.foods[-1] == self.hamburger_img:
+                self.hamburger_qty += 1
                 self.counter += 3
                 self.FPS = 10
             elif self.foods[-1] == self.apple_img:
+                self.apple_qty += 1
                 self.counter += 1
                 self.FPS = 15
 
